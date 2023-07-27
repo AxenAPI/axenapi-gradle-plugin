@@ -1,0 +1,72 @@
+plugins {
+    id 'java-gradle-plugin'
+    id 'maven-publish'
+}
+
+group 'org.axenix.plugin'
+sourceCompatibility = '11'
+
+gradlePlugin {
+    plugins {
+        create("axenapi-generator-plugin"){
+            id = 'axenapi-generator-plugin'
+            implementationClass = 'KafkaCodegenPlugin'
+            version = '1.0.0-SNAPSHOT'
+        }
+    }
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven {
+        allowInsecureProtocol = true
+        url "${NEXUS_SERVER}"
+        credentials {
+            username NEXUS_USER
+            password NEXUS_PASSWORD
+        }
+    }
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allJava
+    classifier = 'sources'
+}
+
+task javadocJar(type: Jar) {
+    from javadoc
+    classifier = 'javadoc'
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId project.name
+            groupId project.group
+            version version
+            from components.java
+            artifact sourcesJar
+            //artifact javadocJar
+        }
+    }
+    repositories {
+        maven {
+            allowInsecureProtocol = true
+            url "${NEXUS_SERVER}"
+            credentials {
+                username NEXUS_USER
+                password NEXUS_PASSWORD
+            }
+        }
+    }
+}
+
+dependencies {
+    implementation 'org.openapitools:openapi-generator:6.3.0'
+    implementation 'org.axenix:axenapi-generator:1.0.0-SNAPSHOT'
+}
+
+test {
+    useJUnitPlatform()
+}
