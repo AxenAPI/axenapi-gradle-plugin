@@ -1,0 +1,4 @@
+include:
+  - project: 'axenapi/devops'
+    ref: main
+    file: 'component_build_ci.yml'
