@@ -17,7 +17,7 @@ public class KafkaCodegenPlugin implements Plugin<Project> {
             task.getInterfaceOnly().set(codegenData.getInterfaceOnly());
             task.getResultWrapper().set(codegenData.getResultWrapper());
             task.getSecurityAnnotation().set(codegenData.getSecurityAnnotation());
-            task.getSecurityAnnotation().set(codegenData.getSendBytes());
+            task.getSendBytes().set(codegenData.getSendBytes());
             task.getUseSpring3().set(codegenData.getUseSpring3());
             task.getUseAutoconfig().set(codegenData.getUseAutoconfig());
             task.getGenerateCorrelationId().set(codegenData.getGenerateCorrelationId());

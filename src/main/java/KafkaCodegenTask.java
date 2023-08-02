@@ -66,7 +66,7 @@ abstract public class KafkaCodegenTask extends DefaultTask {
 
     private final static boolean defaultInterfaceOnly = true;
     private final static boolean defaultKafkaClient = false;
-    private final static String defaultSecurityAnnotation = "";
+    private final static String defaultSecurityAnnotation = null;
     private final static Boolean defaultSendBytes = true;
 
     private final static Boolean defaultUseAutoconfig = true;
