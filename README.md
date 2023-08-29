@@ -1,40 +1,40 @@
 # axenapi-generator-plugin
 
-swagger4kafka plugin предназначен для генерации кода по спецификации асинхронного API в формате OpenAPI 3.*. 
-
-## Подключение плагина 
-1. скачайте, соберите и установите в свой локальный mvn repository (или удаленный) нужную вам версию проекта http://gitlab.ru-central1.internal/internal/swagger4kafka-generator/-/tree/develop (версия должна совпадать с версией плагина).
-2. скачайте, соберите и установите в свой локальный mvn repository (или удаленный) нужную вам версию плагина. 
-3. подключете плагин к вашему проекту:
+axenapi-generator-plugin is a plugin for generating code from asynchronous OpenAPI 3.* specification.
+## Installing plugin
+1. Download, build and install to your local(or remote) mvn repository required version of a project http://gitlab.ru-central1.internal/internal/swagger4kafka-generator/-/tree/develop (project version must be same as the plugin version).
+2. Download, build and install to your local(or remote) mvn repository required plugin version.
+3. Add a plugin dependency to your project:
 ```
 plugins {
 //...
-    id 'swagger4KafkaGradlePlugin' version '1.0.0-SNAPSHOT'
+    id 'axenapi-generator-plugin' version '1.0.0-SNAPSHOT'
 //...
 }
 ```
-4. добавьте зависимоть компиляции от генерации кода:
+4. Add a compilation dependency on code generation:
 ```
 compileJava {
     dependsOn "generateKafka"
 }
 ```
-5. опишите параметры генерации кода в build.gradle:
-    * Генерация кода сервера:
-    ```
-    codegenData {
-        openApiPath =  getProjectDir().getAbsolutePath() + '/src/main/resources/json.json'
-        outDir = getProjectDir().getAbsolutePath() + '/build'
-        srcDir = 'src/main/java'
-        listenerPackage = 'swagger4kafka.listener'
-        modelPackage = 'swagger4kafka.model'
-        kafkaClient = false
-        interfaceOnly = false
-        resultWrapper = 'java.util.concurrent.CompletableFuture'
-    }
-    ```
-    * Генерация кода клиента:
-    ```
+5. Add code generation parameters to your build.gradle:
+- Server code generation:
+```
+codegenData {
+    openApiPath =  getProjectDir().getAbsolutePath() + '/src/main/resources/json.json'
+    outDir = getProjectDir().getAbsolutePath() + '/build'
+    srcDir = 'src/main/java'
+    listenerPackage = 'swagger4kafka.listener'
+    modelPackage = 'swagger4kafka.model'
+    kafkaClient = false
+    interfaceOnly = false
+    resultWrapper = 'java.util.concurrent.CompletableFuture'
+}
+```
+- Client code generation:
+
+```
     codegenData {
         openApiPath =  getProjectDir().getAbsolutePath() + '/src/main/resources/test.json'
         outDir = getProjectDir().getAbsolutePath() + '/build'
@@ -46,8 +46,8 @@ compileJava {
         useSpring3 = true
         resultWrapper
     }
-    ```
-5. рекомендуется добавить сгенерированные файлы в src проекта:
+```
+6. It is recommended to add generated files to src directory of your project:
 ```
 sourceSets {
     main {
@@ -60,56 +60,56 @@ sourceSets {
     }
 }
 ```
-6. По указанному в параметрах пути $outDir/$srcDir у вас будут сгенерирован код. 
+7. The code will be generated to a directory specified in $outDir/$srcDir parameters.
 
-## Описание параметров 
+## Parameters description:
 
-| Наименование | Тип | Обязательное | Значение по умолчанию | Описание 
+| Name| Type| Required| Default value | Description
 | ------ | ------ | ------ | ------ | ------ |
-| openApiPath | String | Да | Нет значения по умолчанию | Путь к спецификации в формате OpenAPI 3.*
-| outDir | String | Да | Нет значения по умолчанию | Каталог, куда будет сложен сгенерированный код
-| srcDir | String | Да | Нет значения по умолчанию | Путь к src каталогу. Рекомендуемое значение  `"src/main/java"`
-| listenerPackage | String | Да | Нет значения по умолчанию | package, в который попадут сгеренированные client/listeners
-| modelPackage | String | Да | Нет значения по умолчанию | package, к который попадут сгеренированные модели (Data Transfer Object)
-| useSpring3 | Boolean | Нет | `false` | Если true, то генерация будет происзодить для springboot 3.1. Если false, то для spring boot 2.7
-| kafkaClient | Boolean | Нет | `false` | Если true, будет генерироваться клиент (producer сообщений), false - интерфейсы сервера (consumer)
-| interfaceOnly | Boolean | Нет | `true` | Влияет только на генерацию клинета. Если true - то будут сгенерированы классы реализации отправки сообщений в kafka. Если false - только интерфейсы.
-| resultWrapper | String | Нет | `""` | Класс, в который будет обернуто возвращаемое значение. Необходимо описать полный путь к классу. 
-| securityAnnotation | cell | Нет | `""` | Класс аннотации, который выставляется при генерации сервера при использовании в consumer авторизации. Если ничего не указано, то security-аннотации не будут ставится. 
-| sendBytes | cell | Нет | `true` | Если стоит `true`, то не будет отправлять header с маппингом типов на наименование headers. Если false - то будет.
-| useAutoconfig | cell | Нет | `true` | Если `true`, то при генерации клиента будет сгенерированы файлы для автоконфигурации.
-| generateMessageId | cell | Нет | `false` | Если `true`, то сгенерированный клиент будет автоматически проставлять header `kafka_messageId` (или другое наименование из параметра `messageIdName`). Значение - случайный UUID.
-| generateCorrelationId | cell | Нет | `false` | Если `true`, то сгенерированный клиент будет автоматически проставлять header `kafka_correlationId` (или другое наименование из параметра `correlationIdName`). Значение - случайный UUID.
-| messageIdName | cell | Нет | "kafka_messageId" | Наименование header, в который положится значение messageId (если `generateMessageId = true`)
-| correlationIdName | cell | Нет | "kafka_correlationId" |  Наименование header, в который положится значение correlationId (если `generateCorrelationId = true`)
+| openApiPath | String | Yes | No default value | Path to OpenAPI 3.* specification.
+| outDir | String | Yes | No default value | Directory, where generated code will be stored.
+| srcDir | String | Yes | No default value | Path to src directory. Recommended value is `"src/main/java"`.
+| listenerPackage | String | Yes | No default value | Package, in which client/listeners will be generated.
+| modelPackage | String | Yes | No default value | Package, in wich models will be generated (Data Transfer Object).
+| useSpring3 | Boolean | No | `false` | If `true`, then code will be generated for springboot 3.1. If `false`, then code will be generated for spring boot 2.7.
+| kafkaClient | Boolean | No | `false` | If `true`, client code(producer) will be generated, if `false` - server code(consumer).
+| interfaceOnly | Boolean | No | `true` | Affects only client generation. If `true` - Kafka consumer implemenation classes will be generated, if `false` - only iterfaces.
+| resultWrapper | String | No | `""` | Class, in which return value will be wrapped. Full path to that class must be specified.
+| securityAnnotation | cell | No | `""` | Annotation class which will be used in consumer code generation if consumer authorization is implemented. If this parameter is not specified, security annotations will not be generated.
+| sendBytes | cell | Нет | No | If `true`, then headers with types mapped by header names will not be used. If `false`, then types will be mapped.
+| useAutoconfig | cell | No | `true` | If `true`, then autoconfiguation files will be generated alongside clients.
+| generateMessageId | cell | No | `false` | If `true`, then generated clients will use header `kafka_messageId`(or other name specified in `messageIdName` parameter) by default. Header value will be random UUID.
+| generateCorrelationId | cell | No | `false` | If `true`, then generated clients will use header `kafka_correlationId` (or other name specified in `correlationIdName` parameter) by default. Header value will be random UUID.
+| messageIdName | cell | No | "kafka_messageId" | Name of the header, in which `messageId` value will be stored(If `generateMessageId = true`)
+| correlationIdName | cell | No | "kafka_correlationId" | Name of the header header, in which `correlationId` value will be stored(If `generateCorrelationId = true`)
 
-## Описание формата файла спецификации
-Для каждого Listener формируется свой контроллер с именем <ListenerClassName>Controller.
-Пример сгенерированного http метода:
+## Specification format:
+For every `Listener` controller <ListenerClassName>Controller will be generated.
+Example of generated http method:
 
-Метод Post
-Url: "/kafka/group-2/multiType/Subordinate"
-Возвращает: Subordinate
+* POST method:
+* Url: "/kafka/group-2/multiType/Subordinate"
+* Returns: Subordinate
 
-Каждый consumer представляет из себя post метод с определенным форматом:
+Every `consumer` consists of POST method of format:
 
-* все сгенерированные http интерфейсы - post методы
-* все сгенерированные интерфейсы имеют url состоящий из 3-4 частей:
-    * первая часть: всегда начинаются с kafka/ - позволяет отделить сгенерированные url от уже имеющихся в приложении http интерфейсов
-    * вторая часть: группа - необязательная часть. Если url состоит из 3 частей, то считается, что группа не указана.
-    * третья часть: наименование топика
-    * четвертая часть: наименование считываемой из топика модели данных (DTO)
+* All generated http interfaces - are POST methods
+* All generated interfaces have url, consisting of 3-4 parts:
+    * first part: always starts with kafka/ - which allows to separate generated url from already existing in applicatio http interfaces.
+    * second part: group - is optional. If url consists of 3 parts - that means that group is not specified.
+    * third part: topic name.
+    * fourth part: Name of data models being read from topic(DTO).
 
-> 💡 Остальная логика не нуждается в дополнительном описании. По сгенерированным контроллерам теперь есть возможность создать спецификацию в OpenAPI формате. Описание формата: https://spec.openapis.org/oas/latest.html. Авторизация и счема авторизации указывается по правилам OpenAPI 3.*
+> 💡 Other logic does not require additional description. You can create OpenAPI specification from generated controller. Format descriptipn: https://spec.openapis.org/oas/latest.html. Authorization should be described by OpenAPI 3.* specification.
 
-Работа с хедерами:
+Using headers:
 
-Для обозначения хедеров к concumer используются query params - можно указать тип и обязательность. Каждые query param - это отдельный header сообщения. 
+You can use `query params` to describe headers for consumers  - type and optionality can be specified. Every query param is a separate message header.
 
-> :bulb: Query params указываются по правилам формата OpenAPI 3.*
+> :bulb: Query params is described by OpenAPI 3.* specification.
 
-> :warning: `__TypeId__` не нужно указывать в хедерах. Сгенерированный клиент будет отправлять `__TypeId__` автоматически.
+> :warning: `__TypeId__` should not be specified in headers. Generated clients will send `__TypeId__` automatically.
 
-## Особенности генерации клиента
+## Client generation features
 
-Сгенерированный клиент использует сгенерированный класс `KafkaSenderServiceImpl` реализующий интерфейс `KafkaSenderService` для отправки сообщений в топик. Если вы не хотите использовать сгенерированную реализацию, то вы можете создать свой Bean реализующий интерфейс `KafkaSenderService`.
+Generated clients use generated `KafkaSenderServiceImpl` implementations of `KafkaSenderService` inerface to send messages to topics. If you do not want to use generated implementation, you can create custom Bean, implementing `KafkaSenderService` interface.
