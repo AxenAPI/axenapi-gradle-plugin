@@ -1,0 +1,122 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: {{ DC_NAME }}
+
+objects:
+  - apiVersion: v1
+    kind: Secret
+    metadata:
+      name: {{ DC_NAME }}-secret
+      namespace: {{ PROJECT }}
+  - apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: {{ DC_NAME }}-config
+      namespace: {{ PROJECT }}
+    data:
+      SERVER_PORT: '{{ SERVER_PORT }}'
+      KAFKA_SERVERS: '{{ KAFKA_SERVERS }}'
+  - apiVersion: apps.openshift.io/v1
+    kind: DeploymentConfig
+    metadata:
+      namespace: {{ PROJECT }}
+      name: {{ DC_NAME }}
+      labels:
+        app: {{ DC_NAME }}
+        name: {{ DC_NAME }}
+    spec:
+      replicas: {{ replicas_count }}
+      triggers:
+        - type: "ConfigChange"
+      selector:
+        deploymentconfig: {{ DC_NAME }}
+      strategy:
+        rollingParams:
+          intervalSeconds: 1
+          maxSurge: 50%
+          maxUnavailable: 50%
+          timeoutSeconds: {{ STRATEGY_ROLLING_PARAMS_TIMEOUT_SECONDS }}
+          updatePeriodSeconds: 1
+        type: Rolling
+      template:
+        metadata:
+          creationTimestamp: null
+          annotations:
+            openshift.io/prometheus: 'true'
+          labels:
+            app: {{ DC_NAME }}
+            deploymentconfig: {{ DC_NAME }}
+        spec:
+          imagePullSecrets:
+            - name: docker-registry-pull-secret
+          securityContext: {}
+          serviceAccount: {{ SA }}
+          serviceAccountName: {{ SA }}
+          containers:
+            - name: {{ DC_NAME }}
+              image: {{ IMAGE_REGISTRY }}/{{ IMAGE_NAME }}:{{ IMAGE_TAG }}
+              imagePullPolicy: Always
+              env:
+                - name: POD_NAME
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.name
+                - name: NAMESPACE
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.namespace
+                - name: LOG_LEVEL
+                  value: {{ LOG_LEVEL }}
+                - name: TZ
+                  value: '{{ TZ }}'
+              envFrom:
+                - configMapRef:
+                    name: {{ DC_NAME }}-config
+                - secretRef:
+                    name: {{ DC_NAME }}-secret
+              ports:
+                - containerPort: 8080
+                  protocol: TCP
+              resources:
+                limits:
+                  cpu: {{ CPU_LIMIT }}
+                  memory: {{ MEMORY_LIMIT }}
+                requests:
+                  cpu: {{ CPU_REQUEST }}
+                  memory: {{ MEMORY_REQUEST }}
+
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      labels:
+        app: {{ DC_NAME }}
+      name: {{ DC_NAME }}
+      namespace: {{ PROJECT }}
+    spec:
+      ports:
+        - name: 8080-tcp
+          port: 80
+          protocol: TCP
+          targetPort: 8080
+      selector:
+        deploymentconfig: {{ DC_NAME }}
+      sessionAffinity: None
+      type: ClusterIP
+
+  - apiVersion: route.openshift.io/v1
+    kind: Route
+    metadata:
+      labels:
+        name: {{ DC_NAME }}
+      name: {{ DC_NAME }}
+      namespace: {{ PROJECT }}
+    spec:
+      host: {{ DC_NAME }}.{{ PROJECT }}.{{ ROUTER_PREFIX }}
+      port:
+        targetPort: 8080-tcp
+      to:
+        kind: Service
+        name: {{ DC_NAME }}
+        weight: 100
+      wildcardPolicy: None
