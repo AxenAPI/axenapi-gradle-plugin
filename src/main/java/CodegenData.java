@@ -11,7 +11,7 @@ abstract public class CodegenData {
     abstract public Property<String> getResultWrapper();
 
     abstract public Property<String> getSecurityAnnotation();
-    abstract public Property<String> getSendBytes();
+    abstract public Property<Boolean> getSendBytes();
 
     abstract public Property<Boolean> getUseSpring3();
 
