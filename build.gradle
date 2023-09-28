@@ -6,6 +6,9 @@ plugins {
 group 'org.axenix.plugin'
 sourceCompatibility = '11'
 
+String nexus_user = System.getenv('NEXUS_USER')
+String nexus_password = System.getenv('NEXUS_PASSWORD')
+
 gradlePlugin {
     plugins {
         create("axenapi-generator-plugin"){
@@ -21,11 +24,9 @@ repositories {
     mavenCentral()
     maven {
         allowInsecureProtocol = true
-        url "${NEXUS_SERVER}"
-        credentials {
-            username NEXUS_USER
-            password NEXUS_PASSWORD
-        }
+        url System.getenv('NEXUS_SERVER_URL').toString()
+        credentials.setUsername(nexus_user)
+        credentials.setPassword(nexus_password)
     }
 }
 
@@ -41,11 +42,9 @@ publishing {
     repositories {
         maven {
             allowInsecureProtocol = true
-            url "${NEXUS_SERVER}"
-            credentials {
-                username NEXUS_USER
-                password NEXUS_PASSWORD
-            }
+            url System.getenv('NEXUS_SERVER_URL').toString()
+            credentials.setUsername(nexus_user)
+            credentials.setPassword(nexus_password)
         }
     }
 }
