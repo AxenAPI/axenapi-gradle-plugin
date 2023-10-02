@@ -58,7 +58,7 @@ publishing {
 
 dependencies {
     implementation 'org.openapitools:openapi-generator:6.3.0'
-    implementation 'org.axenix:axenapi-generator:1.0.0-SNAPSHOT'
+    implementation 'org.axenix:axenapi-generator:1.0.1-SNAPSHOT'
 }
 
 test {
