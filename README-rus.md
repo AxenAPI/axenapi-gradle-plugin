@@ -9,7 +9,7 @@ axenapi-generator-plugin предназначен для генерации ко
 ```
 plugins {
 //...
-    id 'axenapi-generator-plugin' version '1.0.0-SNAPSHOT'
+    id 'axenapi-generator-plugin' version '<current version>'
 //...
 }
 ```
