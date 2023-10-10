@@ -46,6 +46,12 @@ publishing {
             from components.java
         }
     }
+    maven {
+        name = "GitHubPackages"
+        url = uri("https://maven.pkg.github.com/AxenAPI/axenapi-library")
+        credentials.setUsername(project.findProperty("gpr.user") ?: System.getenv("GITHUB_USER"))
+        credentials.setPassword(project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN"))
+    }
     repositories {
         maven {
             allowInsecureProtocol = true
