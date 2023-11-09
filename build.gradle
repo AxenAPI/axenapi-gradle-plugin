@@ -38,7 +38,7 @@ repositories {
     }
 }
 
-ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
+boolean isReleaseVersion = !version.endsWith("SNAPSHOT")
 signing {
     required { isReleaseVersion && gradle.taskGraph.hasTask("publish") }
     sign publishing.publications
