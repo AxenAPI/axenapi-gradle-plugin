@@ -4,7 +4,7 @@ plugins {
     id 'signing'
 }
 
-group 'org.axenix.plugin'
+group 'pro.axenix-innovation.plugin'
 sourceCompatibility = '11'
 
 String repoURL = ""
@@ -69,7 +69,7 @@ publishing {
 
 dependencies {
     implementation 'org.openapitools:openapi-generator:6.3.0'
-    implementation 'org.axenix:axenapi-generator:1.0.1-SNAPSHOT'
+    implementation 'pro.axenix-innovation:axenapi-generator:1.0.1-SNAPSHOT'
 }
 
 test {
