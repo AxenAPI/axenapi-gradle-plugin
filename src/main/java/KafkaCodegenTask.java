@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import com.kafka.company.codegen.KafkaCodegenGenerator;
+
 import io.swagger.parser.OpenAPIParser;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.parser.core.models.ParseOptions;
@@ -27,6 +27,7 @@ import org.openapitools.codegen.ClientOptInput;
 import org.openapitools.codegen.CodegenConstants;
 import org.openapitools.codegen.DefaultGenerator;
 import org.openapitools.codegen.languages.features.CXFServerFeatures;
+import pro.axenix_innovation.axenapi.codegen.KafkaCodegenGenerator;
 
 import java.io.File;
 import java.util.List;
