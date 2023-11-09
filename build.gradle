@@ -1,6 +1,7 @@
 plugins {
     id 'java-gradle-plugin'
     id 'maven-publish'
+    id 'signing'
 }
 
 group 'org.axenix.plugin'
@@ -35,6 +36,10 @@ repositories {
         credentials.setUsername(nexus_user)
         credentials.setPassword(nexus_password)
     }
+}
+
+signing {
+    sign publishing.publications
 }
 
 publishing {
