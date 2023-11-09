@@ -39,11 +39,12 @@ repositories {
 }
 
 boolean isReleaseVersion = !version.endsWith("SNAPSHOT")
-signing {
-    required { isReleaseVersion && gradle.taskGraph.hasTask("publish") }
-    sign publishing.publications
-}
 
+afterEvaluate {
+    if(isReleaseVersion && gradle.taskGraph.hasTask("publish")) {
+        sign publishing.publications
+    }
+}
 
 publishing {
     publications {
