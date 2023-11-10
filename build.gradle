@@ -73,7 +73,7 @@ publishing {
 
 dependencies {
     implementation 'org.openapitools:openapi-generator:6.3.0'
-    implementation 'pro.axenix-innovation:axenapi-generator:1.0.1-SNAPSHOT'
+    implementation 'pro.axenix-innovation:axenapi-generator:1.0.1'
 }
 
 test {
