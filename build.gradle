@@ -1,9 +1,10 @@
 plugins {
     id 'java-gradle-plugin'
     id 'maven-publish'
+    id 'signing'
 }
 
-group 'org.axenix.plugin'
+group 'pro.axenix-innovation.plugin'
 sourceCompatibility = '11'
 
 String repoURL = ""
@@ -37,6 +38,14 @@ repositories {
     }
 }
 
+boolean isReleaseVersion = !version.endsWith("SNAPSHOT")
+
+afterEvaluate {
+    if(isReleaseVersion && gradle.taskGraph.hasTask("publish")) {
+        sign publishing.publications
+    }
+}
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
@@ -64,7 +73,7 @@ publishing {
 
 dependencies {
     implementation 'org.openapitools:openapi-generator:6.3.0'
-    implementation 'org.axenix:axenapi-generator:1.0.0'
+    implementation 'pro.axenix-innovation:axenapi-generator:1.0.1'
 }
 
 test {
