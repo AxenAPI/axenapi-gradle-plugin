@@ -40,33 +40,34 @@ repositories {
 
 boolean isReleaseVersion = !version.endsWith("SNAPSHOT")
 
-afterEvaluate {
-    if(isReleaseVersion && gradle.taskGraph.hasTask("publish")) {
-        sign publishing.publications
-    }
+signing {
+    required { isReleaseVersion && gradle.taskGraph.hasTask("publish") }
+    sign(publishing.publications)
 }
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifactId project.name
-            groupId project.group
-            version version
-            from components.java
+afterEvaluate {
+     publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                artifactId project.name
+                groupId project.group
+                version version
+                from components.java
+            }
         }
-    }
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/AxenAPI/axenapi-gradle-plugin")
-            credentials.setUsername(project.findProperty("gpr.user") ?: System.getenv("GITHUB_USER"))
-            credentials.setPassword(project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN"))
-        }
-        maven {
-            allowInsecureProtocol = true
-            url repoURL
-            credentials.setUsername(nexus_user)
-            credentials.setPassword(nexus_password)
+        repositories {
+            maven {
+                name = "GitHubPackages"
+                url = uri("https://maven.pkg.github.com/AxenAPI/axenapi-gradle-plugin")
+                credentials.setUsername(project.findProperty("gpr.user") ?: System.getenv("GITHUB_USER"))
+                credentials.setPassword(project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN"))
+            }
+            maven {
+                allowInsecureProtocol = true
+                url repoURL
+                credentials.setUsername(nexus_user)
+                credentials.setPassword(nexus_password)
+            }
         }
     }
 }
