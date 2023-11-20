@@ -114,6 +114,7 @@ abstract public class KafkaCodegenTask extends DefaultTask {
         codegen.setGenerateMessageId(getGenerateCorrelationId().getOrElse(defaultGenerateMessageId));
         codegen.setMessageIdName(getMessageIdName().getOrElse(defaultMessageIdName));
         codegen.setCorrelationIdName(getCorrelationIdName().getOrElse(defaultCorrelationIdName));
+        codegen.setFromAxenAPIPlugin(true);
 
         if (!getResultWrapper().getOrElse("").isBlank()) {
             codegen.setResultWrapper(getResultWrapper().getOrNull());
