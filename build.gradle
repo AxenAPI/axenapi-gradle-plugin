@@ -61,7 +61,7 @@ afterEvaluate {
                 pom {
                     name = "Axenix API Generator Gradle Plugin"
                     description = project.description
-                    url = "https://github.com/AxenAPI"
+                    url = "https://github.com/AxenAPI/axenapi-generator-plugin"
                     organization {
                         name = "pro.axenix-innovation"
                         url = "https://github.com/AxenAPI"
