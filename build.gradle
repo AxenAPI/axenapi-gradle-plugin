@@ -2,6 +2,7 @@ plugins {
     id 'java-gradle-plugin'
     id 'maven-publish'
     id 'signing'
+    id("io.github.gradle-nexus.publish-plugin") version "1.3.0"
 }
 
 group 'pro.axenix-innovation.plugin'
@@ -17,12 +18,26 @@ if (version.endsWith('-SNAPSHOT')) {
 String nexus_user = System.getenv('NEXUS_USER')
 String nexus_password = System.getenv('NEXUS_PASSWORD')
 
+String sonatypeRepoURL = ""
+if (version.endsWith('-SNAPSHOT')) {
+    sonatypeRepoURL = System.getenv('SONATYPE_NEXUS_SERVER_URL_SNAPSHOT').toString()
+} else {
+    sonatypeRepoURL = System.getenv('SONATYPE_NEXUS_SERVER_URL_RELEASE').toString()
+}
+
+String sonatype_nexus_user = System.getenv('SONATYPE_NEXUS_USER')
+String sonatype_nexus_password = System.getenv('SONATYPE_NEXUS_PASSWORD')
+
+
 gradlePlugin {
     plugins {
         create("axenapi-generator-plugin"){
             id = 'axenapi-generator-plugin'
+            description = "AxenAPI Generator allows generation of async API (Kafka, Rabbit etc) client libraries (SDK generation), server stubs, and configuration automatically given an OpenAPI Spec (v2, v3)."
+            displayName = "AxenAPI Generator Gradle Plugin"
             implementationClass = 'KafkaCodegenPlugin'
             version = version
+            tags.addAll("openapi-3.0", "openapi-2.0", "openapi", "swagger", "codegen", "sdk")
         }
     }
 }
@@ -48,11 +63,39 @@ signing {
 afterEvaluate {
      publishing {
         publications {
-            mavenJava(MavenPublication) {
-                artifactId project.name
-                groupId project.group
-                version version
-                from components.java
+            pluginMaven {
+                pom {
+                    name = "Axenix API Generator Gradle Plugin"
+                    description = project.description
+                    url = "https://github.com/AxenAPI"
+                    organization {
+                        name = "pro.axenix-innovation"
+                        url = "https://github.com/AxenAPI"
+                    }
+                    licenses {
+                        license {
+                            name = "The Apache Software License, Version 2.0"
+                            url = "https://www.apache.org/licenses/LICENSE-2.0.txt"
+                            distribution = "repo"
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = "axenix-innovation"
+                            name = "AxenAPI-Generator Contributors"
+                            email = "axenapi-info@axenix.pro"
+                        }
+                    }
+                    scm {
+                        url = "https://github.com/AxenAPI/axenapi-generator"
+                        connection = "scm:git:git://github.com/AxenAPI/axenapi-generator.git"
+                        developerConnection = "scm:git:ssh://git@github.com:AxenAPI/axenapi-generator.git"
+                    }
+                    issueManagement {
+                        system = "GitHub"
+                        url = "https://github.com/AxenAPI/axenapi-generator/issues"
+                    }
+                }
             }
         }
         repositories {
@@ -68,8 +111,16 @@ afterEvaluate {
                 credentials.setUsername(nexus_user)
                 credentials.setPassword(nexus_password)
             }
+
+//            maven {
+//                allowInsecureProtocol = true
+//                url sonatypeRepoURL
+//                credentials.setUsername(sonatype_nexus_user)
+//                credentials.setPassword(sonatype_nexus_password)
+//            }
         }
     }
+
 }
 
 dependencies {
@@ -79,4 +130,13 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+nexusPublishing {
+    repositories {
+        sonatype {  //only for users registered in Sonatype after 24 Feb 2021
+            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+        }
+    }
 }
