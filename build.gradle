@@ -36,6 +36,30 @@ gradlePlugin {
         }
     }
 }
+ext.axenApiGeneratorInfo = {
+    displayName = 'Axen API Generator'
+    description = 'This plugin generates APIs for Axenix Innovation projects.'
+    version = '1.0.0'
+    vendor {
+        name = 'Axenix Innovation'
+        url = 'https://axenix.io'
+        email = 'info@axenix.io'
+    }
+    url = 'https://github.com/AxenAPI/axenapi-generator-plugin'
+    scm {
+        connection = 'scm:git:https://github.com/AxenAPI/axenapi-generator-plugin.git'
+        developerConnection = 'scm:git:https://github.com/AxenAPI/axenapi-generator-plugin.git'
+        url = 'https://github.com/AxenAPI/axenapi-generator-plugin'
+    }
+}
+
+gradle.projectsEvaluated {
+    def plugin = project.plugins.findPlugin('pro.axenix-innovation.axenapi.generator')
+    if (plugin != null) {
+        project.ext.axenApiGeneratorInfo.delegate = plugin
+        project.ext.axenApiGeneratorInfo()
+    }
+}
 
 repositories {
     mavenLocal()
