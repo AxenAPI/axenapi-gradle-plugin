@@ -25,8 +25,8 @@ String sonatype_nexus_password = System.getenv('SONATYPE_NEXUS_PASSWORD')
 
 gradlePlugin {
     plugins {
-        create("axenapi-generator-plugin"){
-            id = 'pro.axenix-innovation.axenapi-generator'
+        create("axenapi-generator-gradle-plugin"){
+            id = 'pro.axenix-innovation.axenapi.generator'
             description = "AxenAPI Generator allows generation of async API (Kafka, Rabbit etc) client libraries (SDK generation), server stubs, and configuration automatically given an OpenAPI Spec (v2, v3)."
             displayName = "AxenAPI Generator Gradle Plugin"
             implementationClass = 'KafkaCodegenPlugin'
