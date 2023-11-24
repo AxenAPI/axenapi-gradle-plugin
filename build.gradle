@@ -25,7 +25,7 @@ String sonatype_nexus_password = System.getenv('SONATYPE_NEXUS_PASSWORD')
 
 gradlePlugin {
     website = "https://github.com/AxenAPI/"
-    vcsUrl = "https://github.com/OpenAPITools/openapi-generator-gradle-plugin"
+    vcsUrl = "https://github.com/AxenAPI/axenapi-gradle-plugin"
     plugins {
         create("axenapi-generator-gradle-plugin"){
             id = 'pro.axenix-innovation.axenapi.generator'
