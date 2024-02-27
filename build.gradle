@@ -118,7 +118,7 @@ afterEvaluate {
 }
 
 dependencies {
-    implementation 'org.openapitools:openapi-generator:6.3.0'
+    implementation 'org.openapitools:openapi-generator:6.4.0'
     implementation 'pro.axenix-innovation:axenapi-generator:1.0.2-SNAPSHOT'
 }
 

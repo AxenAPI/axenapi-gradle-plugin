@@ -15,10 +15,32 @@
  */
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
+import org.gradle.api.artifacts.Configuration;
 
 public class KafkaCodegenPlugin implements Plugin<Project> {
     @Override
     public void apply(Project project) {
+        try {
+            Configuration axenapiPluginConf = project.getConfigurations().create("axenapiPluginConf", conf -> {
+                conf.setVisible(false);
+                conf.setCanBeConsumed(false);
+                conf.setCanBeResolved(true);
+                conf.setDescription("Dependencies for axenapi plugin");
+                conf.defaultDependencies(deps -> {
+                    try {
+                        deps.add(project.getDependencies().create("org.openapitools:jackson-databind-nullable:0.2.6"));
+                    } catch (RuntimeException runtimeExc) {
+                        System.out.println("KafkaCodegenPlugin.apply: " + runtimeExc.getMessage());
+                    }
+                });
+            });
+
+            // make it resolvable
+            project.getConfigurations().getByName("implementation").extendsFrom(axenapiPluginConf);
+        } catch (RuntimeException runtimeExc) {
+            System.out.println("KafkaCodegenPlugin.apply: " + runtimeExc.getMessage());
+        }
+
         CodegenData codegenData =
                 project.getExtensions().create("codegenData", CodegenData.class);
 
