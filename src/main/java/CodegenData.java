@@ -21,7 +21,9 @@ abstract public class CodegenData {
     abstract public Property<String> getSrcDir();
     abstract public Property<String> getListenerPackage();
     abstract public Property<String> getModelPackage();
+    abstract public Property<String> getBroker();
     abstract public Property<Boolean> getKafkaClient();
+    abstract public Property<Boolean> getRabbitClient();
     abstract public Property<Boolean> getInterfaceOnly();
     abstract public Property<String> getResultWrapper();
 

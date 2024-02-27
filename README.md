@@ -1,8 +1,8 @@
 # axenapi-generator-plugin
 
 axenapi-generator-plugin is a plugin for generating code from asynchronous OpenAPI 3.* specification.
-## Installing plugin
-1. Download, build and install to your local(or remote) mvn repository required version of a project https://github.com/AxenAPI/axenapi-generator (project version must be same as the plugin version).
+## Installing plugin   
+1. Download, build and install to your local(or remote) mvn repository required version of a project http://gitlab.ru-central1.internal/internal/swagger4kafka-generator/-/tree/develop (project version must be same as the plugin version).
 2. Download, build and install to your local(or remote) mvn repository required plugin version.
 3. Add a plugin dependency to your project:
 ```
