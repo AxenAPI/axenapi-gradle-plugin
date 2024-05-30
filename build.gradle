@@ -67,7 +67,7 @@ afterEvaluate {
             pluginMaven {
                 pom {
                     name = "Axenix API Generator Gradle Plugin"
-                    description = "AxenAPI Generator allows generation of async API (Kafka, Rabbit etc) client libraries (SDK generation), server stubs, and configuration automatically given an OpenAPI Spec (v2, v3)."
+                    description = "bla bla bla AxenAPI Generator allows generation of async API (Kafka, Rabbit etc) client libraries (SDK generation), server stubs, and configuration automatically given an OpenAPI Spec (v2, v3)."
                     url = "https://github.com/AxenAPI/axenapi-generator-plugin"
                     organization {
                         name = "pro.axenix-innovation"
