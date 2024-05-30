@@ -64,7 +64,7 @@ signing {
 afterEvaluate {
      publishing {
         publications {
-            pluginMaven {
+            mavenJava(MavenPublication) {
                 pom {
                     name = "Axenix API Generator Gradle Plugin"
                     description = "AxenAPI Generator allows generation of async API (Kafka, Rabbit etc) client libraries (SDK generation), server stubs, and configuration automatically given an OpenAPI Spec (v2, v3)."
